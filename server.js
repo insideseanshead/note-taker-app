@@ -28,11 +28,6 @@ app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
-//index.html route
-// app.get("*", function (req, res) {
-//     res.sendFile(path.join(__dirname, "public/index.html"));
-//   });
-
 //Set up API ROUTES
   // Parse note object
   // Create function to read current note data
@@ -47,7 +42,8 @@ app.get("/notes", function (req, res) {
 app.post("/api/notes", function (req,res){
     const newNoteObj = {
         title: req.body.title,
-        text: req.body.text
+        text: req.body.text,
+        id: Math.random().toString(36).substr(2, 9)
     }
 
     dbNotes.push(newNoteObj)
@@ -56,19 +52,25 @@ app.post("/api/notes", function (req,res){
     res.send("test")
 })
 
-// Set up get /api/notes. should read the db.json file and return all saved json
-
-
-//Set up POST /api/notes should recieve a new note to save on the request body.
-  // Add new note to db.json file.
-    // Return new note to client.
-
-
-
+//index.html route
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 // DELETE
 // =======================================================
 //TODO: delete api/notes/:id
 
+app.delete("/api/notes/:id", function(req,res){
+  console.log(req.params.id)
+  for (let i =0; i< dbNotes.length; i++){
+    if(dbNotes[i].id===(req.params.id)){
+      dbNotes.splice(i,1);
+    }
+    
+    fs.writeFileSync(path.join(__dirname,"db/db.json"),JSON.stringify(dbNotes,null,2))
+  res.send("test")
+  }
+})
 
 //TODO: receive a query parameter w/ id of note to delete.
 //TODO: loop through db.json file to find propper id and remove note.
