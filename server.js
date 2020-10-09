@@ -3,7 +3,7 @@
 const fs = require("fs");
 const express = require("express");
 const path = require("path");
-// const router = express.Router();
+const router = express.Router();
 
 // EXPRESS APP
 // =======================================================
@@ -36,7 +36,7 @@ app.get("/notes", function (req, res) {
 //Set up API ROUTES
   // Parse note object
   // Create function to read current note data
-  let dbNotes = fs.readFileSync("db/db.json","utf8");
+  let dbNotes = fs.readFileSync(path.join(__dirname, "db/db.json"),"utf8");
   dbNotes = JSON.parse(dbNotes)
 
   app.get("/api/notes", function (req, res) {
@@ -50,7 +50,9 @@ app.post("/api/notes", function (req,res){
         text: req.body.text
     }
 
-    fs.writeFileSync("db/db.json", JSON.stringify(newNoteObj))
+    dbNotes.push(newNoteObj)
+
+    fs.writeFileSync(path.join(__dirname,"db/db.json"),JSON.stringify(dbNotes,null,2))
     res.send("test")
 })
 
@@ -68,19 +70,6 @@ app.post("/api/notes", function (req,res){
 //TODO: delete api/notes/:id
 
 
-
-// app.get("api/clear", function(req,res){
-//   noteData = readNotesDb()
-//   for(i=0; i < noteData.length; i++){
-//     if(noteData[i].id===parseInt(req.params.id)){
-//       noteData.splice(i,1)
-//       writeNotesDb(noteData)
-//       res.send("deleted")
-//     }
-//   }
-  
-//   res.send("clear")
-// })
 //TODO: receive a query parameter w/ id of note to delete.
 //TODO: loop through db.json file to find propper id and remove note.
 //TODO: rewrite the notes to the db.json file.
