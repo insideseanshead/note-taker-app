@@ -3,7 +3,7 @@
 const fs = require("fs");
 const express = require("express");
 const path = require("path");
-const router = express.Router();
+// const router = express.Router();
 
 // EXPRESS APP
 // =======================================================
@@ -29,15 +29,19 @@ app.get("/notes", function (req, res) {
 });
 
 //index.html route
-app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-  });
+// app.get("*", function (req, res) {
+//     res.sendFile(path.join(__dirname, "public/index.html"));
+//   });
 
 //Set up API ROUTES
   // Parse note object
   // Create function to read current note data
+  let dbNotes = fs.readFileSync("db/db.json","utf8");
+  dbNotes = JSON.parse(dbNotes)
 
-
+  app.get("/api/notes", function (req, res) {
+      res.json(dbNotes)
+  })
 // Function used to write new notes to the database.
 
 
