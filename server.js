@@ -44,6 +44,15 @@ app.get("/notes", function (req, res) {
   })
 // Function used to write new notes to the database.
 
+app.post("/api/notes", function (req,res){
+    const newNoteObj = {
+        title: req.body.title,
+        text: req.body.text
+    }
+
+    fs.writeFileSync("db/db.json", JSON.stringify(newNoteObj))
+    res.send("test")
+})
 
 // Set up get /api/notes. should read the db.json file and return all saved json
 
